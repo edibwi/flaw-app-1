@@ -61,6 +61,8 @@
                 <button type="submit">Add Transaction</button>
             </form>
         </div>
+        <div class="report-btn-section" style="text-align:center; margin-top: 24px;">
+        <!-- removed report-btn-section, buttons will be moved below -->
 
         <div class="transactions-section">
             <div class="transactions-header">
@@ -69,12 +71,28 @@
                     <button class="filter-btn active" data-filter="all">All</button>
                     <button class="filter-btn" data-filter="income">Income</button>
                     <button class="filter-btn" data-filter="expense">Expense</button>
+                    <button id="monthly-report-btn">📊 Monthly Report</button>
+                    <button id="expense-report-btn">📑 Expense By Category</button>
                 </div>
             </div>
-            <div class="transaction-list" id="transactionList">
-                <div class="empty-state">
-                    <p>No transactions yet. Add your first transaction above!</p>
-                </div>
+            <div class="transaction-list-table-wrapper">
+                <table class="transaction-list-table">
+                    <thead>
+                        <tr>
+                            <th>Description</th>
+                            <th>Category</th>
+                            <th>Date</th>
+                            <th>Type</th>
+                            <th>Amount</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="transactionList">
+                        <tr class="empty-state">
+                            <td colspan="6" style="text-align:center; color:#999;">No transactions yet. Add your first transaction above!</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

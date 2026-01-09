@@ -1,3 +1,122 @@
+.delete-icon-btn {
+    background: none;
+    border: none;
+    padding: 4px;
+    margin-left: 4px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+    width: 28px;
+    height: 28px;
+}
+.delete-icon-btn:hover {
+    background: #eaf6ff;
+}
+.edit-icon-btn {
+    background: none;
+    border: none;
+    padding: 4px;
+    margin-right: 4px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+    width: 28px;
+    height: 28px;
+}
+
+.edit-icon-btn:hover {
+    background: #eaf6ff;
+}
+
+.edit-icon {
+    stroke: #007bff;
+    width: 18px;
+    height: 18px;
+    pointer-events: none;
+}
+.transaction-list-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    margin-top: 18px;
+}
+
+.transaction-list-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    font-size: 16px;
+    margin-bottom: 10px;
+    overflow: hidden;
+}
+
+.transaction-list-table th, .transaction-list-table td {
+    padding: 12px 10px;
+    text-align: left;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.transaction-list-table th {
+    background: #f7f7fa;
+    color: #333;
+    font-weight: 600;
+}
+
+.transaction-row:last-child td {
+    border-bottom: none;
+}
+
+.transaction-description {
+    font-weight: 600;
+    color: #333;
+}
+
+.transaction-category {
+    color: #666;
+}
+
+.transaction-date {
+    color: #666;
+    font-size: 15px;
+}
+
+.transaction-type.income {
+    color: #28a745;
+    font-weight: 500;
+}
+.transaction-type.expense {
+    color: #dc3545;
+    font-weight: 500;
+}
+.transaction-amount {
+    font-size: 18px;
+    font-weight: bold;
+}
+.print-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 22px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin-left: 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+.print-btn:hover {
+    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+}
 * {
     margin: 0;
     padding: 0;
@@ -12,7 +131,7 @@ body {
 }
 
 .container {
-    max-width: 800px;
+    max-width: 1200px;
     margin: 0 auto;
     background: white;
     border-radius: 15px;
@@ -57,6 +176,128 @@ h1 {
     padding: 20px;
     border-radius: 10px;
     text-align: center;
+}
+
+/* --- Back Button on report.html --- */
+.back-btn {
+    background: none;
+    color: #667eea;
+    border: none;
+    font-size: 1.08rem;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 12px;
+    transition: color 0.2s;
+}
+.back-btn:hover {
+    color: #764ba2;
+    text-decoration: underline;
+}
+.back-arrow {
+    font-size: 1.3em;
+    vertical-align: middle;
+}
+
+/* --- Report Button on index.html --- */
+.report-btn-section {
+    text-align: center;
+    margin-top: 24px;
+}
+
+#monthly-report-btn, #expense-report-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 32px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin-top: 10px;
+    margin-right: 10px;
+}
+#monthly-report-btn:hover, #expense-report-btn:hover {
+    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+}
+
+/* --- Report Page Styles --- */
+.report-container {
+    max-width: 1200px;
+    margin: 40px auto;
+    background: #fff;
+    border-radius: 15px;
+    padding: 32px 24px 24px 24px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.13);
+}
+.report-container h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 24px;
+}
+.report-filters {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 28px;
+}
+.report-filters label {
+    font-weight: 500;
+    color: #444;
+}
+#report-month, #report-year {
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: 1px solid #bbb;
+    font-size: 1rem;
+}
+#show-report-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 22px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+#show-report-btn:hover {
+    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+}
+
+#report-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 18px;
+    background: #fafaff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+#report-table th, #report-table td {
+    padding: 12px 10px;
+    text-align: left;
+}
+#report-table th {
+    background: #667eea;
+    color: #fff;
+    font-weight: 600;
+}
+#report-table tr:nth-child(even) {
+    background: #f2f2fa;
+}
+#report-table td.income {
+    color: #2ecc71;
+    font-weight: 600;
+}
+#report-table td.expense {
+    color: #e74c3c;
+    font-weight: 600;
 }
 
 .income-box {
@@ -157,6 +398,25 @@ button:hover {
 .filter-buttons {
     display: flex;
     gap: 10px;
+}
+
+#monthly-report-btn, #expense-report-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 18px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin-left: 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+#monthly-report-btn:hover, #expense-report-btn:hover {
+    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
 }
 
 .filter-btn {
