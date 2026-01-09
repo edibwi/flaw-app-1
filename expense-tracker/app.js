@@ -1,90 +1,111 @@
-// Expense Tracker App
-const expenseForm = document.getElementById('expense-form');
-const expenseList = document.getElementById('expense-list');
-const totalDiv = document.getElementById('total');
-const categorySummaryDiv = document.getElementById('category-summary');
+let transactions = JSON.parse(localStorage.getItem('transactions')) || [];
+let currentFilter = 'all';
 
-const STORAGE_KEY = 'expense_tracker_data_v1';
+const form = document.getElementById('transactionForm');
+const transactionList = document.getElementById('transactionList');
+const balanceEl = document.getElementById('balance');
+const incomeEl = document.getElementById('income');
+const expensesEl = document.getElementById('expenses');
+const filterButtons = document.querySelectorAll('.filter-btn');
 
-function getExpenses() {
-    const data = localStorage.getItem(STORAGE_KEY);
-    return data ? JSON.parse(data) : [];
+function saveTransactions() {
+    localStorage.setItem('transactions', JSON.stringify(transactions));
 }
 
-function saveExpenses(expenses) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(expenses));
+function updateSummary() {
+    const income = transactions
+        .filter(t => t.type === 'income')
+        .reduce((sum, t) => sum + t.amount, 0);
+    
+    const expenses = transactions
+        .filter(t => t.type === 'expense')
+        .reduce((sum, t) => sum + t.amount, 0);
+    
+    const balance = income - expenses;
+
+    balanceEl.textContent = `$${balance.toFixed(2)}`;
+    incomeEl.textContent = `$${income.toFixed(2)}`;
+    expensesEl.textContent = `$${expenses.toFixed(2)}`;
 }
 
-function renderExpenses() {
-    const expenses = getExpenses();
-    expenseList.innerHTML = '';
-    expenses.forEach((expense, idx) => {
-        const li = document.createElement('li');
-        li.className = 'expense-item';
-        li.innerHTML = `
-            <div class="expense-details">
-                <strong>${expense.name}</strong> - $${expense.amount.toFixed(2)}<br>
-                <span>${expense.category}</span>
-            </div>
-            <div class="expense-actions">
-                <button class="edit" onclick="editExpense(${idx})">Edit</button>
-                <button onclick="deleteExpense(${idx})">Delete</button>
+function renderTransactions() {
+    const filteredTransactions = currentFilter === 'all' 
+        ? transactions 
+        : transactions.filter(t => t.type === currentFilter);
+
+    if (filteredTransactions.length === 0) {
+        transactionList.innerHTML = `
+            <div class="empty-state">
+                <p>No ${currentFilter === 'all' ? '' : currentFilter} transactions yet.</p>
             </div>
         `;
-        expenseList.appendChild(li);
-    });
-    renderSummary(expenses);
-}
+        return;
+    }
 
-function renderSummary(expenses) {
-    const total = expenses.reduce((sum, exp) => sum + exp.amount, 0);
-    totalDiv.textContent = `Total: $${total.toFixed(2)}`;
-    const categories = {};
-    expenses.forEach(exp => {
-        categories[exp.category] = (categories[exp.category] || 0) + exp.amount;
-    });
-    categorySummaryDiv.innerHTML = Object.entries(categories)
-        .map(([cat, amt]) => `<div>${cat}: $${amt.toFixed(2)}</div>`)
+    transactionList.innerHTML = filteredTransactions
+        .map((transaction, index) => {
+            const actualIndex = transactions.indexOf(transaction);
+            return `
+                <div class="transaction-item">
+                    <div class="transaction-info">
+                        <div class="transaction-description">${transaction.description}</div>
+                        <div class="transaction-meta">
+                            ${transaction.category} • ${new Date(transaction.date).toLocaleDateString()}
+                        </div>
+                    </div>
+                    <div class="transaction-amount ${transaction.type}">
+                        ${transaction.type === 'income' ? '+' : '-'}$${transaction.amount.toFixed(2)}
+                    </div>
+                    <button class="delete-btn" onclick="deleteTransaction(${actualIndex})">Delete</button>
+                </div>
+            `;
+        })
         .join('');
 }
 
-expenseForm.onsubmit = function(e) {
+function addTransaction(e) {
     e.preventDefault();
-    const name = document.getElementById('expense-name').value.trim();
-    const amount = parseFloat(document.getElementById('expense-amount').value);
-    const category = document.getElementById('expense-category').value;
-    if (!name || isNaN(amount) || !category) return;
-    const expenses = getExpenses();
-    if (expenseForm.dataset.editIdx) {
-        // Edit mode
-        const idx = parseInt(expenseForm.dataset.editIdx);
-        expenses[idx] = { name, amount, category };
-        delete expenseForm.dataset.editIdx;
-        expenseForm.querySelector('button[type="submit"]').textContent = 'Add Expense';
-    } else {
-        expenses.push({ name, amount, category });
+
+    const description = document.getElementById('description').value;
+    const amount = parseFloat(document.getElementById('amount').value);
+    const type = document.getElementById('type').value;
+    const category = document.getElementById('category').value;
+
+    const transaction = {
+        id: Date.now(),
+        description,
+        amount,
+        type,
+        category,
+        date: new Date().toISOString()
+    };
+
+    transactions.unshift(transaction);
+    saveTransactions();
+    updateSummary();
+    renderTransactions();
+    form.reset();
+}
+
+function deleteTransaction(index) {
+    if (confirm('Are you sure you want to delete this transaction?')) {
+        transactions.splice(index, 1);
+        saveTransactions();
+        updateSummary();
+        renderTransactions();
     }
-    saveExpenses(expenses);
-    expenseForm.reset();
-    renderExpenses();
-};
+}
 
-window.editExpense = function(idx) {
-    const expenses = getExpenses();
-    const exp = expenses[idx];
-    document.getElementById('expense-name').value = exp.name;
-    document.getElementById('expense-amount').value = exp.amount;
-    document.getElementById('expense-category').value = exp.category;
-    expenseForm.dataset.editIdx = idx;
-    expenseForm.querySelector('button[type="submit"]').textContent = 'Update Expense';
-};
+filterButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+        filterButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentFilter = btn.dataset.filter;
+        renderTransactions();
+    });
+});
 
-window.deleteExpense = function(idx) {
-    const expenses = getExpenses();
-    expenses.splice(idx, 1);
-    saveExpenses(expenses);
-    renderExpenses();
-};
+form.addEventListener('submit', addTransaction);
 
-// Initial render
-renderExpenses();
+updateSummary();
+renderTransactions();
